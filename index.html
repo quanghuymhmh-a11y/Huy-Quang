@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attack on Titan - Phong Cảnh 3D</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background: #000; font-family: 'Segoe UI', system-ui, sans-serif; }
+    #canvas-container { width: 100vw; height: 100vh; }
+    canvas { display: block; }
+
+    #ui {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      color: #e8e0d0;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    #title {
+      position: absolute;
+      top: 24px; left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 0.9;
+    }
+    #title h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: #c9b8a0;
+    }
+    #title p {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    #instructions {
+      position: absolute;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 18, 15, 0.75);
+      padding: 12px 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(180, 160, 130, 0.25);
+      font-size: 0.9rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+    #instructions kbd {
+      display: inline-block;
+      background: rgba(255,255,255,0.12);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: inherit;
+      margin: 0 2px;
+    }
+
+    #blocker {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10, 8, 6, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #blocker h2 {
+      font-size: 2rem;
+      color: #d4c4a8;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    #blocker p {
+      color: #a09080;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    #blocker .hint {
+      margin-top: 24px;
+      font-size: 0.95rem;
+      color: #c0b090;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    #crosshair {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 6px; height: 6px;
+      background: rgba(220, 200, 160, 0.7);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <div id="ui">
+    <div id="title">
+      <h1>ATTACK ON TITAN</h1>
+      <p>Phong cảnh ngoài tường — Forest of Giant Trees</p>
+    </div>
+
+    <div id="instructions">
+      <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Di chuyển &nbsp;|&nbsp;
+      <kbd>Chuột</kbd> Nhìn quanh &nbsp;|&nbsp;
+      <kbd>Shift</kbd> Chạy &nbsp;|&nbsp;
+      <kbd>Esc</kbd> Thoát
+    </div>
+
+    <div id="crosshair"></div>
+  </div>
+
+  <div id="blocker">
+    <h2>PHONG CẢNH ATTACK ON TITAN</h2>
+    <p>Khám phá rừng cây khổng lồ và bức tường thành</p>
+    <p class="hint">Nhấn vào đây để bắt đầu</p>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+
+    // ============ SETUP ============
+    const container = document.getElementById('canvas-container');
+    const blocker = document.getElementById('blocker');
+    const crosshair = document.getElementById('crosshair');
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87a0b8);
+    scene.fog = new THREE.FogExp2(0x8ba0b0, 0.0018);
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.in
+... 
